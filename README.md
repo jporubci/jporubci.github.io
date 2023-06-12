@@ -1,1 +1,1 @@
-My personal projects website: https://jporubci.github.io/
+My personal website: https://jporubci.github.io/
