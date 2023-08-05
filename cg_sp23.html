@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>First-Person Shooter with Three.js</title>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+		<link rel="stylesheet" href="assets/css/main.css"/>
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css"/></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper" class="fade-in">
+				<!-- Header -->
+					<header id="header">
+						<a class="logo">Jozef Porubcin</a>
+					</header>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Featured Post -->
+							<section class="post featured">
+								<header class="major">
+									<span class="date">April - May 2023</span>
+									<h2>First-Person Shooter <br>with Three.js</h2>
+									<p>Github: <a href="https://github.com/jporubci/CG_Final_Proj" target="_blank" rel="noopener noreferrer">https://github.com/jporubci/CG_Final_Proj</a></p>
+								</header>
+								<h3>Intro</h3>
+								<p>For the final project in the CSE 40166 Computer Graphics course, I collaborated with Stefan Mesaric and Christian Northrup to create a three-dimensional first-person shooter in the style of classic ‘90s games like Doom and Wolfenstein 3D. The player moves around within an enclosed room, shooting enemies while trying to avoid getting hit themselves. We used Three.js to develop the game, and we utilized many of the computer graphics topics we learned through the semester in class such as vectors and transformations in three-dimensional space, implementing object files, and applying lighting and texturing techniques.</p>
+								<h3><br>Task Delegation</h3>
+								<p>Christian was responsible for player and enemy movement, along with player combat health and damage. The player uses the keyboard to move and turn. This was done by moving and rotating the camera, as the camera location represents where the player is. A key part of the movement is stopping the player from clipping through walls. Using the Three.js raycaster feature, the program detects if the player is close to a wall, in which case it stops movement in the direction of the wall. Thus the walls act as solid objects that you cannot walk through. While moving, there is also a slight up-and-down bobbing movement so it looks like the player is walking instead of gliding.</p>
+								<p>The enemy movement was implemented next. Enemies turn and move towards the player’s location. They are also coded to go around walls, including the central pillar, rather than through them. They also have a floating health bar above them, showing the percent of health they have left.</p>
+								<p>The player starts the game with three lives. If an enemy gets too close to the player, it attacks the player and they lose a life. If the player loses all three lives, the game is over, an alert is displayed with the number of enemies the player killed, and then the game is reset. When an enemy is killed, it drops a rotating heart that the player can pick up by walking into in order to refill health. Note that the maximum number of lives is three, so picking up a fourth heart doesn’t do anything.</p>
+								<p>A heads-up display shows the number of lives the player has left. When the player loses a life, a heart disappears, and a heart comes back when the player regains a life. A minigun from an object file is also added to the foreground. While the player shoots, the minigun rotates.</p>
+								<p>Lighting techniques are also added to relevant objects, including the enemies, the weapon, and the hearts that enemies drop. The light source is positioned at the top of the room.</p>
+								<p>Stefan was responsible for building the world map. First, all of the objects and geometries were created. The outside walls were created with 4 square plane geometries. They were rotated and then their positions were set such that a large box was created. This was the same process for the floor as well although since it's already in the center we just had to simply rotate it. To add a little visual variety in the map, we created a central pillar. For this, instead of creating plane geometries, two box geometries were set in the center of the map. Then the dimensions of the geometries were edited such that they would form two tall rectangular prisms. juxtaposed at 45 a 45 degree angle. All of these objects and planes were added to a "walls" array, which is basically just an array of objects that the raycasting checks against to determine if the player is touching these objects so they do not clip through.</p>
+								<p>The textures were just created using some of the original Doom assets. They were edited and combined using GIMP in order to get the map design we were going for. Specifically, one tall rectangular wall texture was taken and duplicated such that there would be two of them side by side in the middle of the wall. Then, another similar texture was taken and duplicated on the left and right edges of the wall. This same texture was used for all four walls as well as the central pillar. For the floor, a floor texture from Doom was taken and tessellated so that it would cover the entire floor in a 4x4 fashion.</p>
+								<p>I mainly worked on the Weapon and Enemy class, but also worked on debugging various errors. Firstly, the Weapon class has 13 attributes: the weapon’s base damage, a damage fall-off multiplier, a damage ramp-up multiplier, the maximum damage fall-off displacement, the minimum damage ramp-up displacement, the weapon’s cooldown, ammunition count, reload time, damage instances per count of ammunition, and a value for bullet spread. Following is an overview of each of the attributes’ purposes.</p>
+								<p>The base damage represents the amount of damage that a single instance of damage from the weapon provides before any modifiers are taken into effect.</p>
+								<p>The damage fall-off multiplier represents the fraction of the outgoing damage that should be provided by a single instance of damage from the weapon based on the maximum damage fall-off displacement of the weapon. Similarly, the damage ramp-up multiplier represents how much the outgoing damage should be multiplied by based on the minimum damage ramp-up displacement of the weapon. In other words, the closer you are to an enemy, the more damage you will do, based on the damage ramp-up multiplier, up to the minimum damage ramp-up displacement. The farther you are from an enemy, the less damage you will do, based on the damage fall-off multiplier, up to the maximum damage fall-off displacement. This encourages players to approach enemies and engage at close proximity. This is a double-edged sword because enemies will be more capable of damaging the player at close range. This increases the risk-reward factor of combat in our game, ideally making combat more fun.</p>
+								<p>The weapon’s cooldown is the minimum amount of real-world time that the weapon must wait before being able to consume a count of ammunition. A cooldown of 1/60th of a second would mean that the weapon would be able to fire once per frame. It does not mean that the weapon must wait 1 frame between shots, aka firing once every 2 frames. This is because firing is considered to be an instantaneous action that happens at the very beginning of a frame, and the frame lasts a 60th of a second, so by the time the next frame is ready, the weapon is off cooldown, and ready to fire again. If we implemented it such that a weapon with a cooldown of 1/60th of a second fired once every 2 frames, then it would be as if the firing of the weapon lasted the entire duration of the frame it was fired on, and that is not consistent with how damage calculations work. Damage is not taken for the entire duration of a frame; it is calculated instantly before the frame is even drawn, and the frame that is drawn is drawn to reflect the game state at the time after the previous frame was drawn. 1/60th of a second after the frame is drawn, the current frame is stale, and the new frame is fresh. So, it makes sense to count time in the way that we counted it in our project; that is, at the beginning of frames, not throughout, or at the end of them.</p>
+								<p>The weapon’s ammunition count determines how many shots it can fire. The higher the ammunition count is, the more times it can fire. Weapons with high ammunition counts generally have lower cooldown times, and weapons with low ammunition counts generally have higher cooldown times. High cooldown times also generally means higher base damage, and lower cooldown times generally means lower base damage. This is because damage per second is a function of the weapon’s cooldown and base damage. Ammunition is important in designing the feel of a weapon because it is linked to both of these key factors of a weapon’s damage output per second, which is very important. A weapon’s job, after all, is to defeat enemies, which requires dealing damage. In our game, the weapon’s ammunition count is very high because it is a machine gun with a high rate of fire.</p>
+								<p>The weapon’s reload time is the amount of time between a weapon’s ammunition count going from 0 to max. A weapon’s reload time, along with the ammunition count, determines how long a player can stay in combat. If the reload time is very high, it encourages players to retreat to cover to reload.</p>
+								<p>The damage instances per count of ammunition attribute determines the number of instances of damage to calculate per count of ammunition from the weapon. This is important because sometimes, the fire rate is not an even multiple of the frame rate. Our machine gun in our game fires about 38 bullets per second. This means that a bullet fires about once every 1.58 frames. Half frames are not possible, and there is no simple fix to this problem. If you decided to change the fire rate to 30 bullets per second and simply increase the damage to make the damage per second the same, you’d need to decrease the ammunition count in order to make up for the decreased rate of fire, so the player spends the same amount of time firing per maximum count of ammunition. This isn’t always desirable however, as forcing weapon fire rates to be a multiple of the refresh rate of the game’s internal logic restricts weapon animation and feel, which is critical to a game’s design. That’s why this attribute was absolutely essential. Visually, it now appears as though the machine gun is spraying a plethora of bullets each frame, as opposed to a single bullet, which would look visually stupid; it would look like the machine gun is spewing a single laser line on each frame, which is horribly ugly. Drawing multiple lines per frame is the best way to draw the machine gun’s firing.</p>
+								<p>The last attribute of the weapon is a value for its angular spread. Here is a link to a Desmos graph which visualizes the value of the weapon’s spread and how it affects the path a bullet will take: <a href="https://www.desmos.com/calculator/p7vsno9u15" target="_blank" rel="noopener noreferrer">https://www.desmos.com/calculator/p7vsno9u15</a>. Simply, the value of the spread determines the maximum angular displacement that a bullet may randomly be directed towards, offset from the direction of the camera. This angular displacement only applies itself in a single direction, say right. It is then applied to the other direction, say the left, so that the angular displacement in both directions is equal. Horizontally, the bullet’s direction is altered according to its spread. The same is applied to its vertical angle. Ultimately, this means the bullets’ spread is within not a circular firing cone, but a square “cone,” if it can even be called that. In other words, since the bullet’s spread horizontally and vertically are calculated separately and the total angular displacement is simply added, the resulting area within which a bullet can land is a square, not a circle. This was much easier to implement mathematically, so it was done to simplify things.</p>
+								<p>The Enemy class has many attributes, but they are significantly less important because, at the end of the day, the only significant attributes are their health and damage. Their health determines how much damage they can sustain before dying and disappearing, and their damage determines how harmful they are towards the player.</p>
+								<h3><br>Screenshots</h3>
+								<div class="image fit"><img src="images/Doom_still.png" alt=""/>
+									<div class="credits" style="font-size: 0.5rem; font-style: italic"></div>
+								</div>
+								<p>Above is an image of the player standing in a room with 3 lives. No enemies are in the room. The player is standing still.</p>
+								<div class="image fit"><img src="images/Doom_firing.png" alt=""/>
+									<div class="credits" style="font-size: 0.5rem; font-style: italic"></div>
+								</div>
+								<p>This is an image of the player firing at an enemy. The enemy’s health is decreasing, and it is visually getting darker. They originally start out as the color red, but as they take more and more damage, they get blacker and blacker. This is a design choice to visually reflect the amount of damage an enemy has taken.</p>
+								<div class="image fit"><img src="images/Doom_heart.png" alt=""/>
+									<div class="credits" style="font-size: 0.5rem; font-style: italic"></div>
+								</div>
+								<p>The enemy died, and left a heart where it once was.</p>
+								<div class="image fit"><img src="images/Doom_game_over.png" alt=""/>
+									<div class="credits" style="font-size: 0.5rem; font-style: italic"></div>
+								</div>
+								<p>The player foolishly let itself be killed by a spider. The game displays a message to the player. The game is over. Clicking on the “OK” button restarts the game to the original state.</p>
+								<h3><br>Challenges</h3>
+								<p>A significant design detail regarding the enemy is their hurtbox. Originally, their mesh was used to register bullet hits against enemies, however this was computationally extremely expensive. One of the bugs I fixed was optimizing the game’s performance. There were two instances in which the game was optimized. Initially, the game lagged when the player moved. This was a simple fix; the problem was that the function to draw the scene was being called within the movement functions on top of already being called once per frame, so by removing the draw scene call in movement functions, the performance drop went away. The second performance optimization was in enemy hurtboxes. To fix the computationally expensive requirements of checking the highly complicated mesh of spider enemy objects to register hits from bullets in the game, we simplified things by generating an invisible box for each spider enemy object. This box follows the enemy, and instead of using the spider’s mesh to compute bullet hits, we just used the box, which is much more computationally simple. Calculating hits is a simple matter of using a Three.js raycaster. This is also what allows us to draw the bullet trace visualization. One last design implementation regarding bullet traces was how to draw them. Ideally, we wanted players to be able to shoot at anything they could see; aka, anything in view on screen. This meant that bullets would effectively come out from the player’s eyes (the camera), however if you try to draw this, the bullets become invisible since they are infinitely thin lines that originate from the player’s eyes. Furthermore, it conflicts with the player’s view that the bullets are below their eyes, as displayed by the fact that the machine gun weapon is seemingly in the arms of the player. To resolve both of these issues, the bullets are simply drawn from a slight offset below the camera’s position. This reconciles both issues.</p>
+								<h3><br>Conclusion</h3>
+								<p>Overall, I learned a lot about Three.js of course. I learned quite a bit about game design as well, as I did some research for this project in order to make it engaging as a game. I know I focused a lot on the game-design aspect of this project, and slightly less on the graphical design, however in some cases, the two overlapped, such as my idea of making the enemies visually change color to reflect damage taken. This is an example of both a graphical design element, and a game design aspect. I also learned some math when I was implementing the many formulas required for computing angular bullet spread, as well as the many transformations and computations for rendering and calculating various object positions and camera coordinates, etc, particularly for raycasting and ray tracing.</p>
+								<p>Credit to Stefan and Christian for co-authoring portions of the source of this article.</p>
+							</section>
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<section class="split contact">
+							<section>
+								<h3>Email</h3>
+								<p><a href="mailto:jporubci@nd.edu">jporubci@nd.edu</a></p>
+							</section>
+							<section>
+								<h3>Phone</h3>
+								<p>+13092306283</p>
+							</section>
+							<section>
+								<h3>Links</h3>
+								<ul class="icons alt">
+									<li><a href="https://github.com/jporubci" target="_blank" rel="noopener noreferrer" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+								</ul>
+							</section>
+						</section>
+					</footer>
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

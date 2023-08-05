@@ -2658,6 +2658,12 @@ input, select, textarea {
 
 		}
 
+	.credits {
+		position: absolute;
+		top: 100%;
+		left: 0%;
+	}
+
 	a.image {
 		overflow: hidden;
 	}
