@@ -50,22 +50,22 @@
 									<div class="credits" style="font-size: 0.5rem; font-style: italic">Link to full PNG: <a href="https://yld.me/raw/gOLI.png" target="_blank" rel="noopener noreferrer">https://yld.me/b7c8>https://yld.me/raw/gOLI.png</a></div>
 								</div>
 								<p>In order to evaluate our system’s performance, we analyzed it both quantitatively and qualitatively. We wanted to ensure both that our goal of providing reasonable performance to one or more clients uploading, downloading, and deleting files had been met, and we wanted to make sure that our goals of providing durable storage of user data and persisting it across the peer-to-peer network were also met. In order to determine the quantitative performance of our system, we ran a test script that concurrently uploaded, downloaded, and deleted 200 10MB data objects from the system. Tests were done with 1, 3, 5, 7, and 9 peers, which we believed was enough to test the network aspects of our system, and each number of peers was tested with both one client and three concurrent clients. What follows are graphs of our results:</p>
-								<div class="image fit"><img src="images/sPIN_ADD_Throughput.png" alt=""/>
+								<div class="image fit"><img src="images/sPin_ADD_Throughput.png" alt=""/>
 									<div class="credits" style="font-size: 0.5rem; font-style: italic"></div>
 								</div>
-								<div class="image fit"><img src="images/sPIN_ADD_Latency.png" alt=""/>
+								<div class="image fit"><img src="images/sPin_ADD_Latency.png" alt=""/>
 									<div class="credits" style="font-size: 0.5rem; font-style: italic"></div>
 								</div>
-								<div class="image fit"><img src="images/sPIN_GET_Throughput.png" alt=""/>
+								<div class="image fit"><img src="images/sPin_GET_Throughput.png" alt=""/>
 									<div class="credits" style="font-size: 0.5rem; font-style: italic"></div>
 								</div>
-								<div class="image fit"><img src="images/sPIN_GET_Latency.png" alt=""/>
+								<div class="image fit"><img src="images/sPin_GET_Latency.png" alt=""/>
 									<div class="credits" style="font-size: 0.5rem; font-style: italic"></div>
 								</div>
-								<div class="image fit"><img src="images/sPIN_DEL_Throughput.png" alt=""/>
+								<div class="image fit"><img src="images/sPin_DEL_Throughput.png" alt=""/>
 									<div class="credits" style="font-size: 0.5rem; font-style: italic"></div>
 								</div>
-								<div class="image fit"><img src="images/sPIN_DEL_Latency.png" alt=""/>
+								<div class="image fit"><img src="images/sPin_DEL_Latency.png" alt=""/>
 									<div class="credits" style="font-size: 0.5rem; font-style: italic"></div>
 								</div>
 								<p>Overall, in our quantitative evaluations, we found that our performance was acceptable for the file sizes that we were working with. Especially for the larger peer counts in the three client tests, we were quite happy with an average time to complete each GET and ADD operation of 0.177 seconds and 0.208 seconds respectively. The relatively higher performance of DEL requests makes sense given that much, much less has to be sent over the network for those operations. Instead of uploading or downloading data like the others, all that has to be done is send up the object identifier that the user wishes to delete.</p>
